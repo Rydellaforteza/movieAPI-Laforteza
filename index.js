@@ -6,14 +6,14 @@ const port = process.env.PORT || 4000;
 const app = express();
 
 /* --------------------------- CORS FIX (Render Safe) --------------------------- */
-app.use(cors({
+aapp.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://movieapp-laforteza.onrender.com", // your future frontend deployment
-    "*" // temporary wildcard while testing on Render
+    "https://movie-app-client-neon.vercel.app",   // your Vercel frontend
+    "https://movieapp-laforteza.onrender.com"    // optional if you deploy frontend on Render again
   ],
-  methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-  allowedHeaders: "Content-Type, Authorization"
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 /* ----------------------------------------------------------------------------- */
 
