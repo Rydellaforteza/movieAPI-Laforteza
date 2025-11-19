@@ -6,14 +6,18 @@ const port = 4000;
 
 const app = express();
 
+/* --------------------------- CORS FIX (Render Safe) --------------------------- */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-app.use(cors({
-  origin: "*",  
-  methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-  allowedHeaders: "Content-Type, Authorization",
-}));
-app.options("*", cors());
-
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // Important for preflight
+  }
+  next();
+});
+/* ----------------------------------------------------------------------------- */
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
