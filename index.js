@@ -5,28 +5,28 @@ const cors = require("cors");
 const port = process.env.PORT || 4000;
 const app = express();
 
-/* --------------------------- CORS FIX (Render Safe) --------------------------- */
-aapp.use(cors({
+
+app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://movie-app-client-neon.vercel.app",   // your Vercel frontend
-    "https://movieapp-laforteza.onrender.com"    // optional if you deploy frontend on Render again
+    "https://movie-app-client-neon.vercel.app",   
+    "https://movieapp-laforteza.onrender.com"    
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
-/* ----------------------------------------------------------------------------- */
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* --------------------- FIX: remove deprecated mongoose options --------------------- */
+
 mongoose.connect(
   "mongodb+srv://admin:admin1234@rydelanndb.4ukmbcc.mongodb.net/b581-Movie-App?retryWrites=true&w=majority&appName=RydelAnnDB"
 )
   .then(() => console.log("Now connected to MongoDB Atlas."))
   .catch(err => console.error("MongoDB connection error:", err));
-/* ----------------------------------------------------------------------------------- */
+
 
 const movieRoutes = require("./routes/movie");
 const userRoutes = require("./routes/user");
