@@ -2,34 +2,31 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const port = 4000;
-
+const port = process.env.PORT || 4000;
 const app = express();
 
 /* --------------------------- CORS FIX (Render Safe) --------------------------- */
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // Important for preflight
-  }
-  next();
-});
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://movieapp-laforteza.onrender.com", // your future frontend deployment
+    "*" // temporary wildcard while testing on Render
+  ],
+  methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type, Authorization"
+}));
 /* ----------------------------------------------------------------------------- */
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb+srv://admin:admin1234@rydelanndb.4ukmbcc.mongodb.net/b581-Movie-App?retryWrites=true&w=majority&appName=RydelAnnDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-
-mongoose.connection.once("open", () =>
-  console.log("Now connected to MongoDB Atlas.")
-);
+/* --------------------- FIX: remove deprecated mongoose options --------------------- */
+mongoose.connect(
+  "mongodb+srv://admin:admin1234@rydelanndb.4ukmbcc.mongodb.net/b581-Movie-App?retryWrites=true&w=majority&appName=RydelAnnDB"
+)
+  .then(() => console.log("Now connected to MongoDB Atlas."))
+  .catch(err => console.error("MongoDB connection error:", err));
+/* ----------------------------------------------------------------------------------- */
 
 const movieRoutes = require("./routes/movie");
 const userRoutes = require("./routes/user");
@@ -38,8 +35,8 @@ app.use("/movies", movieRoutes);
 app.use("/users", userRoutes);
 
 if (require.main === module) {
-  app.listen(process.env.PORT || port, () => {
-    console.log(`API is now online on port ${process.env.PORT || port}`);
+  app.listen(port, () => {
+    console.log(`API is now online on port ${port}`);
   });
 }
 
