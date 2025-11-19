@@ -9,7 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use(cors());
+app.use(    // Allow access from anywhere for now
+    cors({
+        origin: "*",
+        // origin: allowedOrigins,
+        //credentials: true,
+    })
+);
 
 mongoose.connect("mongodb+srv://admin:admin1234@rydelanndb.4ukmbcc.mongodb.net/b581-Movie-App?retryWrites=true&w=majority&appName=RydelAnnDB", {
     useNewUrlParser: true,
